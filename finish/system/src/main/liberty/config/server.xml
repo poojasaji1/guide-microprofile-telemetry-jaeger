@@ -1,5 +1,5 @@
 <server description="Sample Liberty server">
-    <name>systemServer</name>
+
     <featureManager>
         <feature>mpTelemetry-1.0</feature>
         <feature>jsonb-3.0</feature>
@@ -10,5 +10,5 @@
     <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
                   id="defaultHttpEndpoint" host="*" />
 
-    <webApplication location="demo-microprofile-telemetry-system.war" contextRoot="/"></webApplication>
+    <webApplication location="draft-guide-microprofile-telemetry.war" contextRoot="/"></webApplication>
 </server>

@@ -53,7 +53,7 @@ You'll configure the provided inventory and system services to use Jaeger/Zipkin
 
 == Additional prerequisites 
 
-Before you begin, make sure you have all the necessary prerequisites.
+Before you begin, make sure you have all the necessary prerequisites. You can export the data that MicroProfile Telemetry 1.0 collects to Jaeger or Zipkin. Additionally, OpenTelemetry includes a simple logging exporter, which provides an easy way to check that spans are being created by viewing the data in your console. This may be helpful for debugging.
 
 Jaeger:
 Before you begin, deploy the Jaeger all-in-one executable file to start the Jaeger tracing system. The Jaeger all-in-one executable file is configured for quick local testing. You can find information about the Jaeger server and instructions for starting the all-in-one executable file in the Jaeger documentation.

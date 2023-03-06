@@ -1,5 +1,5 @@
 <server description="Sample Liberty server">
-    <name>systemServer</name>
+
     <featureManager>
         <feature>jsonb-3.0</feature>
         <feature>mpTelemetry-1.0</feature>
