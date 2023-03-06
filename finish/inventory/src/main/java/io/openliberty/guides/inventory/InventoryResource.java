@@ -17,7 +17,7 @@
  import io.opentelemetry.api.trace.Span;
  import io.opentelemetry.context.Scope;
  
- import io.openliberty.demo.inventory.model.InventoryList;
+ import io.openliberty.guides.inventory.model.InventoryList;
  import jakarta.enterprise.context.RequestScoped;
  import jakarta.inject.Inject;
  import jakarta.ws.rs.DELETE;

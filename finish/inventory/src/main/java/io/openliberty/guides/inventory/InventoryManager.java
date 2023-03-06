@@ -17,9 +17,9 @@
  import io.opentelemetry.instrumentation.annotations.WithSpan;
  import io.opentelemetry.instrumentation.annotations.SpanAttribute;
  
- import io.openliberty.demo.inventory.client.SystemClient;
- import io.openliberty.demo.inventory.model.InventoryList;
- import io.openliberty.demo.inventory.model.SystemData;
+ import io.openliberty.guides.inventory.client.SystemClient;
+ import io.openliberty.guides.inventory.model.InventoryList;
+ import io.openliberty.guides.inventory.model.SystemData;
  import jakarta.enterprise.context.ApplicationScoped;
  import jakarta.inject.Inject;
  import java.util.List;
