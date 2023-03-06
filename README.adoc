@@ -1,11 +1,40 @@
-# draft-microprofile-telemetry
+//  Copyright (c) 2022, 2023 IBM Corporation and others.
+// Licensed under Creative Commons Attribution-NoDerivatives
+// 4.0 International (CC BY-ND 4.0)
+//   https://creativecommons.org/licenses/by-nd/4.0/
+//
+// Contributors:
+//     IBM Corporation
+//
 
-## MicroProfile Telemetry 1.0
-Create and Manage traces using OpenTelemetry open standards 
+:projectid: draft-guide-microprofle-telemetry 
+:page-layout: guide-multipane
+:page-duration: 20 minutes
+:page-releasedate: 2023-04-01
+:page-essential: false
+:page-description: Learn how to use create and manage traces using OpenTelemetry open standards. 
+:guide-author: Open Liberty
+:page-tags: ['MicroProfile']
+:page-permalink: /guides/{projectid}
+:page-related-guides: ['guide-microprofile-opentracing', 'microprofile-opentracing-jaeger']
+:imagesdir: /img/guide/{projectid}
+:page-seo-title: MicroProfile Telemetry 1.0: Create and manage traces using OpenTelemetry open standards
+:page-seo-description: Distributed tracing helps DevOps teams keep track of requests between microservices. MicroProfile adopts OpenTelemetry Tracing to allow developers to observe requests across their distributed systems.
+:source-highlighter: prettify
+:guide-author: Open Liberty
+= Create and manage traces using OpenTelemetry open standards 
 
 
-# What you’ll learn 
+[.hidden]
+NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
+Learn how to use Jakarta WebSocket to send and receive messages between services without closing the connection.
+
+// =================================================================================================
+//  What you'll learn
+// =================================================================================================
+
+== What you'll learn
 The use of microservices architecture may increase difficultly to see how services depend on or affect other services. Consequently, making it harder to find the source of latency or inaccuracy.
 One way to increase observability of an application is by emitting traces. OpenTelemetry is a set of APIs, SDKs, tooling and integrations that are designed for the creation and management of telemetry data such as traces, metrics, and logs. MicroProfile Telemetry 1.0 adopts OpenTelemetry so your MicroProfile applications can benefit from both manual and automatic traces!
 
@@ -16,9 +45,13 @@ Exporters are components that send data to a backend service so you can visualis
 
 You can export the data that MicroProfile Telemetry 1.0 collects to Jaeger or Zipkin. Additionally, OpenTelemetry includes a simple logging exporter, which provides an easy way to check that spans are being created by viewing the data in your console. This may be helpful for debugging
 
-You’ll configure the provided inventory and system services to use Jaeger/Zipkin for distributed tracing with MicroProfile OpenTracing. You’ll run these services in two separate JVMs made of two server instances to demonstrate tracing in a distributed environment. If all the components were run on a single server, then any logging software would be sufficient.
+You'll configure the provided inventory and system services to use Jaeger/Zipkin for distributed tracing with MicroProfile OpenTracing. You'll run these services in two separate JVMs made of two server instances to demonstrate tracing in a distributed environment. If all the components were run on a single server, then any logging software would be sufficient.
 
-# Additional prerequisites 
+// =================================================================================================
+//  Additional prerequisites 
+// =================================================================================================
+
+== Additional prerequisites 
 
 Before you begin, make sure you have all the necessary prerequisites.
 
@@ -30,8 +63,13 @@ Zipkin:
 For this guide, Zipkin is used as the distributed tracing system. You can find the installation instructions for Zipkin at the Zipkin quickstart page. You’re not required to use Zipkin. You may choose to use another tracing system. However, this guide is written using Zipkin. If you use a different tracing system, the required instructions may differ.
 Before you continue, confirm your Zipkin server is up and running. By default, Zipkin can be found at the http://localhost:9411 URL.
 
-# Getting started 
+// =================================================================================================
+// Getting started
+// =================================================================================================
+[role='command']
+include::{common-includes}/gitclone.adoc[]
 
+=== Try what you'll build
 The fastest way to work through this guide is to clone the Git repository and use the projects that are provided inside:
 
 ```
@@ -94,17 +132,32 @@ Stop the inventory service by pressing ```Ctrl+c``` in the terminal session.
 
 You have collected traces using the Java Agent and Automatic Instrumentation!
 
+// =================================================================================================
+// Building the application 
+// =================================================================================================
+== Building the application 
 
-# Building the application 
 
-# Enabling the existing Telemetry implementation 
+// =================================================================================================
+// Enabling the existing Telemetry implementation 
+// =================================================================================================
+== Enabling the existing Telemetry implementation 
 
-# Enabling and disabling the distributed …
 
-# Testing the services 
+// =================================================================================================
+// Enabling and disabling the distributed
+// =================================================================================================
+== Enabling and disabling the distributed
+
+
+// =================================================================================================
+// Testing the services 
+// =================================================================================================
+== Testing the services 
 
 No automated tests are provided to verify the correctness of the traces. Manually verify these traces by viewing them on the Jaeger/Zipkin server.
-A few tests are included for you to test the basic functionality of the services. If a test failure occurs, then you might have introduced a bug into the code.
+
+A few tests are included for you to test the basic functionality of the services. If a test failure occurs, then you might have introduced a bug into the code. These tests will run automatically as a part of the Maven build process when you run the `mvn install` command. You can also run these tests separately from the build by using the `mvn verify` command, but first make sure the servers are stopped.
 
 	# Running the tests
 
@@ -113,3 +166,15 @@ Since you started Open Liberty in dev mode, run the tests for the system and inv
 When you are done checking out the services, exit dev mode by pressing ```CTRL+C``` in the shell sessions where you ran the system and inventory services, or by typing ```q``` and then pressing the ```enter/return``` key.
 
 Finally, stop the Jaeger/Zipkin service that you started in the Additional prerequisites section.
+
+
+
+// =================================================================================================
+// Great work! You're done!
+// =================================================================================================
+
+== Great work! You're done!
+
+You developed an application that creates and manages traces using MicroProfile Telemetry 1.0 and Open Liberty.
+
+include::{common-includes}/attribution.adoc[subs="attributes"]
