@@ -7,28 +7,28 @@
 //     IBM Corporation
 //
 
-:projectid: draft-guide-microprofle-telemetry 
+:projectid: draft-guide-microprofle-opentelemetry-jaeger 
 :page-layout: guide-multipane
 :page-duration: 20 minutes
 :page-releasedate: 2023-04-01
 :page-essential: false
-:page-description: Learn how to use create and manage traces using OpenTelemetry open standards. 
+:page-description: Explore how to enable and customize tracing of REST service endpoint methods by using MicroProfile Telemetry and Jaeger.
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile']
 :page-permalink: /guides/{projectid}
 :page-related-guides: ['guide-microprofile-opentracing', 'microprofile-opentracing-jaeger']
 :imagesdir: /img/guide/{projectid}
-:page-seo-title: MicroProfile Telemetry 1.0: Create and manage traces using OpenTelemetry open standards
-:page-seo-description: Distributed tracing helps DevOps teams keep track of requests between microservices. MicroProfile adopts OpenTelemetry Tracing to allow developers to observe requests across their distributed systems.
+:page-seo-title: Enabling distributed tracing in Java microservices using MicroProfile Telemetry and the Jaeger tracing system.
+:page-seo-description: A getting started tutorial and an example on how to enable distributed tracing in Java microservices to easily trace request flows that span multiple resources by using MicroProfile Telemetry and Jaeger tracing system.​
 :source-highlighter: prettify
 :guide-author: Open Liberty
-= Create and manage traces using OpenTelemetry open standards 
 
+= Create and manage traces using OpenTelemetry open standards 
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to use Jakarta WebSocket to send and receive messages between services without closing the connection.
+Distributed tracing helps DevOps teams keep track of requests between microservices. MicroProfile adopts OpenTelemetry Tracing to allow developers to observe requests across their distributed systems.
 
 // =================================================================================================
 //  What you'll learn
@@ -53,10 +53,10 @@ You'll configure the provided inventory and system services to use Jaeger for di
 
 == Additional prerequisites 
 
-Before you begin, make sure you have all the necessary prerequisites. You can export the data that MicroProfile Telemetry 1.0 collects to Jaeger. Additionally, OpenTelemetry includes a simple logging exporter, which provides an easy way to check that spans are being created by viewing the data in your console. This may be helpful for debugging.
+Before you begin, make sure you have all the necessary prerequisites. You can export the data that MicroProfile Telemetry 1.0 collects to Jaeger. OpenTelemetry includes a simple logging exporter, which provides an easy way to check that spans are being created by viewing the data in your console. This may be helpful for debugging.
 
-Jaeger:
-Before you begin, deploy the Jaeger all-in-one executable file to start the Jaeger tracing system. The Jaeger all-in-one executable file is configured for quick local testing. You can find information about the Jaeger server and instructions for starting the all-in-one executable file in the Jaeger documentation.
+Deploy the Jaeger all-in-one executable file to start the Jaeger tracing system. The Jaeger all-in-one executable file is configured for quick local testing. You can find information about the Jaeger server and instructions for starting the all-in-one executable file in the link:https://www.jaegertracing.io/docs/1.39/getting-started/[Jaeger documentation].
+
 Before you proceed, make sure that your Jaeger server is up and running. Jaeger can be found at the http://localhost:16686 URL.
 
 // =================================================================================================
@@ -65,7 +65,6 @@ Before you proceed, make sure that your Jaeger server is up and running. Jaeger 
 [role='command']
 include::{common-includes}/gitclone.adoc[]
 
-=== Try what you'll build
 The fastest way to work through this guide is to clone the Git repository and use the projects that are provided inside:
 
 ```
@@ -79,15 +78,29 @@ The finish directory contains the finished project that you will build.
 
 Before you begin, make sure you have all the necessary prerequisites.
 
-Start the system service:
+=== Try what you'll build
+
+The finish directory in the root of this guide contains the finished application. Give it a try before you proceed.
+
+Open a command-line session and navigate to the finish/system directory. 
+
+```
+cd finish
+cd system
+```
+
+Run the following Maven goal to build the system service and deploy it to Open Liberty:
 
 ```
 mvn liberty:run
 ```
+After you see the following message in the command-line session, your system service is ready:
 
-Navigate to the system properties endpoint:
+```
+The defaultServer server is ready to run a smarter planet.
+```
 
-http://localhost:9080/system/properties
+Make sure that your Jaeger server is running and navigate to the system properties endpoint http://localhost:9080/system/properties URL. 
 
 A span for this request will be created by the Java Agent. Check for the span in the exporter’s endpoint.
 
@@ -115,7 +128,7 @@ Navigate to the inventory endpoint:
 
 http://localhost:9081/inventory/systems/localhost
 
-You should see 3 spans in the exporter’s endpoint: two spans from inventory and one span from system.
+You should see 5 spans in the exporter’s endpoint: four spans from inventory and one span from system.
 
 Stop the inventory service by pressing ```Ctrl+c``` in the terminal session.
 
@@ -126,27 +139,155 @@ You have collected traces using the Java Agent and Automatic Instrumentation!
 // =================================================================================================
 == Building the application 
 
+You need to start the services to see basic traces appear in Jaeger.
+
+When you run Open Liberty in development mode, known as dev mode, the server listens for file changes and automatically recompiles and deploys your updates whenever you save a new change.
+
+Open a command-line session and navigate to the start/inventory directory. Run the following Maven goal to start the inventory service in dev mode:
+
+```
+mvn liberty:dev
+```
+
+Open a command-line session and navigate to the start/system directory. Run the following Maven goal to start the system service in dev mode:
+
+```
+mvn liberty:dev
+```
+
+After you see the following message, your application server in dev mode is ready:
+
+```
+**************************************************************
+*    Liberty is running in dev mode.
+```
+
+Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.
+
+When the servers start, you can find the system and inventory services at the following URLs:
+
+* http://localhost:9080/system/properties
+
+* http://localhost:9081/inventory/systems
 
 // =================================================================================================
 // Enabling the existing Telemetry implementation 
 // =================================================================================================
-== Enabling the existing Telemetry implementation 
+== Enabling Telemetry implementation 
+
+Automatic instrumentation only instruments Jakarta RESTful web service applications. To get further spans on other operations, such as database calls, you can add manual instrumentation to the source code.
+
+Before instrumenting your code, the following prerequisites are required:
+
+Third-party APIs must be made visible for your application in the `server.xml`:
+
+```
+<webApplication location="demo-microprofile-telemetry-inventory.war" contextRoot="/">
+    <!-- enable visibility to third party apis -->
+    <classloader apiTypeVisibility="+third-party"/>
+</webApplication>
+```
+
+server.xml
+[source, xml, linenums, role='code_column']
+----
+include::finish/inventory/server.xml[]
+----
+
+The OpenTelemetry API and OpenTelemetry Instrumentation Annotations must be provided as dependencies to your build path. For example, with Maven, we add the following to the `pom.xml` file:
+
+```
+<dependency>
+    <groupId>io.opentelemetry</groupId>
+    <artifactId>opentelemetry-api</artifactId>
+    <version>1.19.0</version>
+</dependency>
+<dependency>
+    <groupId>io.opentelemetry.instrumentation</groupId>
+    <artifactId>opentelemetry-instrumentation-annotions</artifactId>
+    <version>1.19.0-alpha</version>
+</dependency>
+```
+
+pom.xml
+[source, xml, linenums, role='code_column']
+----
+include::finish/inventory/pom.xml[]
+----
+
+// =================================================================================================
+// Manually create traces 
+// =================================================================================================
+== Manually create traces 
+
+Now you are all set to instrument your code to manually create traces. 
+
+Start by injecting a `Tracer` and `Span` object:
+
+```
+@Inject
+Tracer tracer;
+
+@Inject
+Span getPropertiesSpan;
+```
+
+This can then be used to create spans. For example, a span called GettingProperties starts and an event is added before the system service is called:
+
+```
+getPropertiesSpan = tracer.spanBuilder("GettingProperties").startSpan();
+Properties props = manager.get(hostname);
+try(Scope scope = getPropertiesSpan.makeCurrent()){
+    ...
+    getPropertiesSpan.addEvent("Received properties");
+}
+finally{
+    getPropertiesSpan.end();
+}
+```
+
+You can also create new spans by annotating methods in any Jakarta CDI beans using @WithSpan. The InventoryManager.java file in the demo application creates a span when a new system is added to the inventory. The hostname method parameter is annotated with the @SpanAttribute annotation to indicate that it is part of the trace:
+
+```
+@WithSpan
+public void add(@SpanAttribute(value = "hostname") String hostname, Properties systemProps) {
+    ...
+}
+```
+
+A span created using the @WithSpan annotation can be given a name. For example, this span is given the name list:
+
+```
+@WithSpan("list")
+public InventoryList list() {
+    ...
+}
+```
 
 
 // =================================================================================================
-// Enabling and disabling the distributed
+// Testing the application 
 // =================================================================================================
-== Enabling and disabling the distributed
+== Testing the application 
 
+Now that you created the spans manually, we can build the inventory service and deploy it to Open Liberty:
 
-// =================================================================================================
-// Testing the services 
-// =================================================================================================
-== Testing the services 
+cd inventory
 
-No automated tests are provided to verify the correctness of the traces. Manually verify these traces by viewing them on the Jaeger server.
+mvn liberty:run
 
-A few tests are included for you to test the basic functionality of the services. If a test failure occurs, then you might have introduced a bug into the code. These tests will run automatically as a part of the Maven build process when you run the `mvn install` command. You can also run these tests separately from the build by using the `mvn verify` command, but first make sure the servers are stopped.
+Navigate to the inventory endpoint:
+
+http://localhost:9081/inventory/systems/localhost
+
+You should see five spans in the exporter’s endpoint: four spans from inventory and one span from system, as shown in the following example:
+
+// insert img 
+
+These spans are all part of one single trace that is emitted from the request to the endpoint. It is therefore easier to identify the source of inaccuracy or latency in a single request by debugging spans individually.
+
+For more information, see link:https://opentelemetry.io/docs/instrumentation/java/manual/[OpenTelemetry’s manual instrumentation documentation].
+
 
 === Running the tests
 

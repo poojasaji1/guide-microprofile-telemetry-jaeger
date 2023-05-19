@@ -13,10 +13,10 @@
 
 import java.util.Properties;
 
-/*import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.context.Scope;
-*/
+
 import io.openliberty.guides.inventory.model.InventoryList;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -40,22 +40,14 @@ public class InventoryResource {
     @Path("/{hostname}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPropertiesForHost(@PathParam("hostname") String hostname) {
-        //getPropertiesSpan = tracer.spanBuilder("GettingProperties").startSpan();
         Properties props = manager.get(hostname);
-        //try(Scope scope = getPropertiesSpan.makeCurrent()){
                 if (props == null) {
-                    //getPropertiesSpan.addEvent("Cannot get properties");
                     return Response.status(Response.Status.NOT_FOUND)
                                 .entity("{ \"error\" : \"Unknown hostname or the system "
                                 + "service may not be running on " + hostname + "\" }")
                                 .build();
                 }
-                //getPropertiesSpan.addEvent("Received properties");
                 manager.add(hostname, props);
-        /*}
-        finally{
-            getPropertiesSpan.end();
-        }   */ 
         return Response.ok(props).build();
         
     }
