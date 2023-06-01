@@ -47,6 +47,9 @@ Exporters are components that send data to a backend service so you can visualis
 
 You'll configure the provided inventory and system services to use Jaeger for distributed tracing with MicroProfile OpenTracing. You'll run these services in two separate JVMs made of two server instances to demonstrate tracing in a distributed environment. If all the components were run on a single server, then any logging software would be sufficient.
 
+image::assets/mptelemetry_diagram.png[Functionality Diagram,align="center"]
+{empty} +
+
 // =================================================================================================
 //  Additional prerequisites 
 // =================================================================================================
@@ -104,17 +107,6 @@ Make sure that your Jaeger server is running and navigate to the system properti
 
 A span for this request will be created by the Java Agent. Check for the span in the exporter’s endpoint.
 
-MicroProfile Telemetry 1.0 allows you to observe traces without modifying source code in your Jakarta RESTful web service (aka JAX-RS) applications.
-As you can see in the inventory service, you can enable mpTelemetry-1.0 in your server.xml:
-
-```
-<featureManager>
-  <feature>mpTelemetry-1.0</feature>
-</featureManager>
-```
-
-By default, MicroProfile Telemetry tracing is off. To enable any tracing aspects, specify ```otel.sdk.disabled=false``` as a config property or ```OTEL_SDK_DISABLED=false``` as an environment property for your server.
-
 Open a new command-line session and navigate to the inventory directory:
 
 ```
@@ -129,6 +121,9 @@ Navigate to the inventory endpoint:
 http://localhost:9081/inventory/systems/localhost
 
 You should see 5 spans in the exporter’s endpoint: four spans from inventory and one span from system.
+
+image::assets/mptelemetry_inventory_manual_span.png[Spans Output Final,align="center"]
+{empty} +
 
 Stop the inventory service by pressing ```Ctrl+c``` in the terminal session.
 
@@ -175,6 +170,41 @@ When the servers start, you can find the system and inventory services at the fo
 // =================================================================================================
 == Enabling Telemetry implementation 
 
+MicroProfile Telemetry 1.0 allows you to observe traces without modifying source code in your Jakarta RESTful web service (aka JAX-RS) applications.
+As you can see in the inventory service, you can enable mpTelemetry-1.0 in your server.xml:
+
+```
+<featureManager>
+  <feature>mpTelemetry-1.0</feature>
+</featureManager>
+```
+
+By default, MicroProfile Telemetry tracing is off. To enable any tracing aspects, specify ```otel.sdk.disabled=false``` as a config property or ```OTEL_SDK_DISABLED=false``` as an environment property for your server.
+
+For more information on these properties, see link:https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/sdk-environment-variables.md[OpenTelemetry’s configuration documentation].
+
+To begin, open a new command-line session and navigate to the `system` directory:
+
+`cd system`
+
+Start the `system` service:
+
+`mvn liberty:run`
+
+Navigate to the system properties endpoint:
+
+http://localhost:9080/system/properties
+
+A span for this request will be automatically created by MicroProfile Telemetry. Check for the span in your chosen exporter’s endpoint. For example:
+
+image::assets/mptelemetry_system_span.png[System Spans,align="center"]
+{empty} +
+
+// =================================================================================================
+// Manually create traces 
+// =================================================================================================
+== Manually create traces 
+
 Automatic instrumentation only instruments Jakarta RESTful web service applications. To get further spans on other operations, such as database calls, you can add manual instrumentation to the source code.
 
 Before instrumenting your code, the following prerequisites are required:
@@ -191,7 +221,7 @@ Third-party APIs must be made visible for your application in the `server.xml`:
 server.xml
 [source, xml, linenums, role='code_column']
 ----
-include::finish/inventory/server.xml[]
+include::finish/inventory/src/main/liberty/config/server.xml[]
 ----
 
 The OpenTelemetry API and OpenTelemetry Instrumentation Annotations must be provided as dependencies to your build path. For example, with Maven, we add the following to the `pom.xml` file:
@@ -215,11 +245,6 @@ pom.xml
 include::finish/inventory/pom.xml[]
 ----
 
-// =================================================================================================
-// Manually create traces 
-// =================================================================================================
-== Manually create traces 
-
 Now you are all set to instrument your code to manually create traces. 
 
 Start by injecting a `Tracer` and `Span` object:
@@ -231,6 +256,12 @@ Tracer tracer;
 @Inject
 Span getPropertiesSpan;
 ```
+
+InventoryResource.java
+[source, java, linenums, role='code_column']
+----
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryResource.java[]
+----
 
 This can then be used to create spans. For example, a span called GettingProperties starts and an event is added before the system service is called:
 
@@ -246,6 +277,12 @@ finally{
 }
 ```
 
+InventoryResource.java
+[source, java, linenums, role='code_column']
+----
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryResource.java[]
+----
+
 You can also create new spans by annotating methods in any Jakarta CDI beans using @WithSpan. The InventoryManager.java file in the demo application creates a span when a new system is added to the inventory. The hostname method parameter is annotated with the @SpanAttribute annotation to indicate that it is part of the trace:
 
 ```
@@ -254,6 +291,12 @@ public void add(@SpanAttribute(value = "hostname") String hostname, Properties s
     ...
 }
 ```
+
+InventoryManager.java
+[source, java, linenums, role='code_column']
+----
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java[]
+----
 
 A span created using the @WithSpan annotation can be given a name. For example, this span is given the name list:
 
@@ -264,6 +307,11 @@ public InventoryList list() {
 }
 ```
 
+InventoryManager.java
+[source, java, linenums, role='code_column']
+----
+include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java[]
+----
 
 // =================================================================================================
 // Testing the application 
@@ -282,7 +330,8 @@ http://localhost:9081/inventory/systems/localhost
 
 You should see five spans in the exporter’s endpoint: four spans from inventory and one span from system, as shown in the following example:
 
-// insert img 
+image::assets/mptelemetry_inventory_manual_span.png[Spans Output Final,align="center"]
+{empty} +
 
 These spans are all part of one single trace that is emitted from the request to the endpoint. It is therefore easier to identify the source of inaccuracy or latency in a single request by debugging spans individually.
 
