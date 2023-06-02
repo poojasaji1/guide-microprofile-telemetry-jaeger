@@ -45,7 +45,7 @@ Spans are representative of single operations in a request and contain a name, t
 Context is an immutable object contained in the span data to identify the unique request that each span is a part of. This data is required for moving trace information across service boundaries, allowing developers to follow a single request through a potentially complex distributed system.
 Exporters are components that send data to a backend service so you can visualise and monitor the generated spans.
 
-You'll configure the provided inventory and system services to use Jaeger for distributed tracing with MicroProfile OpenTracing. You'll run these services in two separate JVMs made of two server instances to demonstrate tracing in a distributed environment. If all the components were run on a single server, then any logging software would be sufficient.
+You'll configure the provided `inventory` and `system` services to use link:https://www.jaegertracing.io/[Jaeger] for distributed tracing with MicroProfile OpenTracing. You'll run these services in two separate JVMs made of two server instances to demonstrate tracing in a distributed environment. If all the components were run on a single server, then any logging software would be sufficient.
 
 image::mptelemetry_diagram.png[Functionality Diagram,align="center"]
 {empty} +
@@ -56,9 +56,7 @@ image::mptelemetry_diagram.png[Functionality Diagram,align="center"]
 
 == Additional prerequisites 
 
-Before you begin, make sure you have all the necessary prerequisites. You can export the data that MicroProfile Telemetry 1.0 collects to Jaeger. OpenTelemetry includes a simple logging exporter, which provides an easy way to check that spans are being created by viewing the data in your console. This may be helpful for debugging.
-
-Deploy the Jaeger all-in-one executable file to start the Jaeger tracing system. The Jaeger all-in-one executable file is configured for quick local testing. You can find information about the Jaeger server and instructions for starting the all-in-one executable file in the link:https://www.jaegertracing.io/docs/1.39/getting-started/[Jaeger documentation].
+Before you begin, deploy the Jaeger all-in-one executable file to start the Jaeger tracing system. The Jaeger all-in-one executable file is configured for quick local testing. You can find information about the Jaeger server and instructions for starting the all-in-one executable file in the link:https://www.jaegertracing.io/docs/1.39/getting-started/[Jaeger documentation].
 
 Before you proceed, make sure that your Jaeger server is up and running. Jaeger can be found at the http://localhost:16686 URL.
 
@@ -68,66 +66,44 @@ Before you proceed, make sure that your Jaeger server is up and running. Jaeger 
 [role='command']
 include::{common-includes}/gitclone.adoc[]
 
-The fastest way to work through this guide is to clone the Git repository and use the projects that are provided inside:
-
-```
-git clone https://github.com/openliberty/draft-guide-microprofile-telemetry.git
-cd draft-guide-microprofile-telemetry
-```
-
-The start directory contains the starting project that you will build upon.
-
-The finish directory contains the finished project that you will build.
-
-Before you begin, make sure you have all the necessary prerequisites.
-
 === Try what you'll build
 
-The finish directory in the root of this guide contains the finished application. Give it a try before you proceed.
+The `finish` directory in the root of this guide contains the finished application. Give it a try before you proceed.
 
-Open a command-line session and navigate to the finish/system directory. 
-
-```
-cd finish
-cd system
-```
-
-Run the following Maven goal to build the system service and deploy it to Open Liberty:
+Open a command-line session and navigate to the `finish/system` directory. Run the following Maven goal to build the `system` service and deploy it to Open Liberty:
 
 ```
 mvn liberty:run
 ```
-After you see the following message in the command-line session, your system service is ready:
+
+Open another command-line session and navigate to the `finish/inventory` directory. Run the following Maven goal to build the `inventory` service and deploy it to Open Liberty:
+
+After you see the following message in both command-line sessions, both of your services are ready:
 
 ```
 The defaultServer server is ready to run a smarter planet.
 ```
 
-Make sure that your Jaeger server is running and navigate to the system properties endpoint http://localhost:9080/system/properties URL. 
+Make sure that your Jaeger server is running and point your browser to the http://localhost:9081/inventory/systems/localhost URL. 
 
-A span for this request will be created by the Java Agent. Check for the span in the exporter’s endpoint.
+When you visit this endpoint, you make two GET HTTP requests, one to the system service and one to the inventory service. Both of these requests are configured to be traced, so a new trace is recorded in Jaeger.
 
-Open a new command-line session and navigate to the inventory directory:
+To view the traces, go to the http://localhost:16686 URL. You can view the traces for the inventory or system services under the Search tab. Select the services in the Select a service menu and click the Find Traces button at the end of the section.
 
-```
-cd inventory
-```
-Run the following Maven goal to build the inventory service and deploy it to Open Liberty:
-```
-mvn liberty:run
-```
-Navigate to the inventory endpoint:
-
-http://localhost:9081/inventory/systems/localhost
-
-You should see 5 spans in the exporter’s endpoint: four spans from inventory and one span from system.
+If you only see the jaeger-query option listed in the dropdown, you might need to wait a little longer and refresh the page to see the application services.
+View the traces for inventory. You’ll see the following trace:
 
 image::mptelemetry_inventory_manual_span.png[Spans Output Final,align="center"]
 {empty} +
 
-Stop the inventory service by pressing ```Ctrl+c``` in the terminal session.
+The trace has five spans, four from inventory and one from system. Click the trace to view its details. Under Service & Operation, you see the spans in this trace. You can inspect each span by clicking it to reveal more detailed information, such as the time at which a request was received and the time at which a response was sent back.
 
-You have collected traces using the Java Agent and Automatic Instrumentation!
+After you’re finished reviewing the application, stop the Open Liberty servers by pressing CTRL+C in the command-line sessions where you ran the system and inventory services. Alternatively, you can run the following goals from the finish directory in another command-line session:
+
+```
+mvn -pl system liberty:stop
+mvn -pl inventory liberty:stop
+```
 
 // =================================================================================================
 // Building the application 
