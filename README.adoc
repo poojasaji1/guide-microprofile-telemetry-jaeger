@@ -159,13 +159,19 @@ By default, MicroProfile Telemetry tracing is off. To enable any tracing aspects
 
 For more information on these properties, see link:https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/sdk-environment-variables.md[OpenTelemetry’s configuration documentation].
 
+=== Collect traces using automatic instrumentation
+
 To begin, open a new command-line session and navigate to the `system` directory:
 
-`cd system`
+```
+cd system
+```
 
 Start the `system` service:
 
-`mvn liberty:run`
+```
+mvn liberty:run
+```
 
 Navigate to the system properties endpoint:
 
@@ -183,7 +189,9 @@ image::mptelemetry_system_span.png[System Spans,align="center"]
 
 Automatic instrumentation only instruments Jakarta RESTful web service applications. To get further spans on other operations, such as database calls, you can add manual instrumentation to the source code.
 
-Before instrumenting your code, the following prerequisites are required:
+=== Enabling OpenTelemetry API and OpenTelemetry Instrumentation Annotations 
+
+The OpenTracing API is exposed as a third-party API in Open Liberty. To add the visibility of OpenTracing APIs to the application, add third-party to the types of API packages that this class loader supports. 
 
 Third-party APIs must be made visible for your application in the `server.xml`:
 
@@ -221,7 +229,11 @@ pom.xml
 include::finish/inventory/pom.xml[]
 ----
 
+=== Manual instrumentation of application code 
+
 Now you are all set to instrument your code to manually create traces. 
+
+Use the @Traced annotation to define explicit span creation for specific classes and methods. If you place the annotation on a class, then the annotation is automatically applied to all methods within that class. If you place the annotation on a method, then the annotation overrides the class annotation if one exists.
 
 Start by injecting a `Tracer` and `Span` object:
 
@@ -289,16 +301,12 @@ InventoryManager.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java[]
 ----
 
-// =================================================================================================
-// Testing the application 
-// =================================================================================================
-== Testing the application 
-
 Now that you created the spans manually, we can build the inventory service and deploy it to Open Liberty:
 
+```
 cd inventory
-
 mvn liberty:run
+```
 
 Navigate to the inventory endpoint:
 
@@ -313,6 +321,14 @@ These spans are all part of one single trace that is emitted from the request to
 
 For more information, see link:https://opentelemetry.io/docs/instrumentation/java/manual/[OpenTelemetry’s manual instrumentation documentation].
 
+// =================================================================================================
+// Testing the application 
+// =================================================================================================
+== Testing the application 
+
+No automated tests are provided to verify the correctness of the traces. Manually verify these traces by viewing them on the Jaeger server.
+
+A few tests are included for you to test the basic functionality of the services. If a test failure occurs, then you might have introduced a bug into the code.
 
 === Running the tests
 
