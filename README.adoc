@@ -47,7 +47,7 @@ Exporters are components that send data to a backend service so you can visualis
 
 You'll configure the provided inventory and system services to use Jaeger for distributed tracing with MicroProfile OpenTracing. You'll run these services in two separate JVMs made of two server instances to demonstrate tracing in a distributed environment. If all the components were run on a single server, then any logging software would be sufficient.
 
-image::assets/mptelemetry_diagram.png[Functionality Diagram,align="center"]
+image::mptelemetry_diagram.png[Functionality Diagram,align="center"]
 {empty} +
 
 // =================================================================================================
@@ -122,7 +122,7 @@ http://localhost:9081/inventory/systems/localhost
 
 You should see 5 spans in the exporter’s endpoint: four spans from inventory and one span from system.
 
-image::assets/mptelemetry_inventory_manual_span.png[Spans Output Final,align="center"]
+image::mptelemetry_inventory_manual_span.png[Spans Output Final,align="center"]
 {empty} +
 
 Stop the inventory service by pressing ```Ctrl+c``` in the terminal session.
@@ -197,7 +197,7 @@ http://localhost:9080/system/properties
 
 A span for this request will be automatically created by MicroProfile Telemetry. Check for the span in your chosen exporter’s endpoint. For example:
 
-image::assets/mptelemetry_system_span.png[System Spans,align="center"]
+image::mptelemetry_system_span.png[System Spans,align="center"]
 {empty} +
 
 // =================================================================================================
@@ -330,7 +330,7 @@ http://localhost:9081/inventory/systems/localhost
 
 You should see five spans in the exporter’s endpoint: four spans from inventory and one span from system, as shown in the following example:
 
-image::assets/mptelemetry_inventory_manual_span.png[Spans Output Final,align="center"]
+image::mptelemetry_inventory_manual_span.png[Spans Output Final,align="center"]
 {empty} +
 
 These spans are all part of one single trace that is emitted from the request to the endpoint. It is therefore easier to identify the source of inaccuracy or latency in a single request by debugging spans individually.
