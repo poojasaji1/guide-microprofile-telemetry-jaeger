@@ -6,11 +6,11 @@
 // Contributors:
 //     IBM Corporation
 //
-
 :page-layout: guide-multipane
-:projectid: microprofile-opentelemetry-jaeger 
+:projectid: microprofile-opentelemetry-jaeger
 :page-duration: 20 minutes
 :page-releasedate: 2023-04-01
+:page-guide-category: microprofile
 :page-essential: false
 :page-description: Explore how to enable and customize tracing of REST service endpoint methods by using MicroProfile Telemetry and Jaeger.
 :guide-author: Open Liberty
