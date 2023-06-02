@@ -7,8 +7,8 @@
 //     IBM Corporation
 //
 
-:projectid: draft-guide-microprofle-opentelemetry-jaeger 
 :page-layout: guide-multipane
+:projectid: draft-guide-microprofile-opentelemetry-jaeger 
 :page-duration: 20 minutes
 :page-releasedate: 2023-04-01
 :page-essential: false
@@ -16,6 +16,7 @@
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile']
 :page-permalink: /guides/{projectid}
+:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/prod
 :page-related-guides: ['guide-microprofile-opentracing', 'microprofile-opentracing-jaeger']
 :imagesdir: /img/guide/{projectid}
 :page-seo-title: Enabling distributed tracing in Java microservices using MicroProfile Telemetry and the Jaeger tracing system.
