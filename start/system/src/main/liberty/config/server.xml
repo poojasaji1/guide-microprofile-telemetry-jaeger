@@ -1,14 +1,17 @@
-<server description="Sample Liberty server">
+<server description="system service">
 
     <featureManager>
-        <feature>mpTelemetry-1.0</feature>
-        <feature>jsonb-3.0</feature>
         <feature>cdi-4.0</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>jsonp-2.1</feature>
         <feature>restfulWS-3.1</feature>
     </featureManager>
 
-    <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
+    <httpEndpoint httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}"
                   id="defaultHttpEndpoint" host="*" />
 
-    <webApplication location="draft-guide-microprofile-telemetry-system.war" contextRoot="/"></webApplication>
+    <webApplication location="guide-microprofile-telemetry-system.war"
+                    contextRoot="/" />
+
 </server>

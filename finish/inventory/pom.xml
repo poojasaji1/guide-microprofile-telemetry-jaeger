@@ -4,15 +4,15 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.openliberty.guides</groupId>
-    <artifactId>draft-guide-microprofile-telemetry-inventory</artifactId>
+    <artifactId>guide-microprofile-telemetry-inventory</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
         <!-- OpenLiberty runtime -->
         <liberty.var.system.http.port>9080</liberty.var.system.http.port>
@@ -25,7 +25,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>9.1.0</version>
+            <version>10.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -35,15 +35,49 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
+        <!-- tag::opentelemetry[] -->
         <dependency>
             <groupId>io.opentelemetry</groupId>
             <artifactId>opentelemetry-api</artifactId>
-            <version>1.19.0</version>
+            <version>1.26.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-instrumentation-annotations</artifactId>
-            <version>1.19.0-alpha</version>
+            <version>1.26.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- end::opentelemetry[] -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>6.0.0.Final</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-json-binding-provider</artifactId>
+            <version>6.0.0.Final</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
+            <version>2.0.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>yasson</artifactId>
+            <version>2.0.4</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -60,14 +94,18 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
-                <version>3.3.4</version>
+                <version>3.8</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.0</version>
                 <configuration>
-                    <runtimeArtifact>
-                    <groupId>io.openliberty.beta</groupId>
-                    <artifactId>openliberty-runtime</artifactId>
-                    <version>LATEST</version>
-                    <type>zip</type>
-                    </runtimeArtifact>
+                    <systemPropertyVariables>
+                        <sys.http.port>${liberty.var.system.http.port}</sys.http.port>
+                        <inv.http.port>${liberty.var.default.http.port}</inv.http.port>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
