@@ -35,6 +35,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
+        <!-- For tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

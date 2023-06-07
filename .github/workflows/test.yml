@@ -26,7 +26,6 @@ jobs:
         uses: github/super-linter@v3.17.0
         env:
           VALIDATE_ALL_CODEBASE: false
-          VALIDATE_JSCPD: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: ./tools/pr-checker/linters/
           DEFAULT_BRANCH: draft
@@ -59,7 +58,7 @@ jobs:
       - name: Post tests
         if: always()
         run: |
-          logsPath=$(sudo find . -name "console.log");
+          logsPath=$(sudo find .. -name "console.log");
           sudo cat $logsPath | sudo grep Launching
 
       - name: Archive finish inventory logs if failed
