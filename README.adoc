@@ -37,11 +37,11 @@ Distributed tracing helps DevOps teams to keep track of requests between microse
 == What you'll learn
 The use of microservices architecture may increase difficultly to see how services depend on or affect other services. Consequently, making it harder to find the source of latency or inaccuracy.
 
-One way to increase observability of an application is by emitting traces. https://opentelemetry.io/[OpenTelemetry^] is a set of APIs, SDKs, tooling and integrations that are designed for the creation and management of telemetry data such as traces, metrics, and logs. MicroProfile Telemetry adopts OpenTelemetry so your applications can benefit from both manual and automatic traces.
+One way to increase observability of an application is by emitting traces. https://opentelemetry.io/[OpenTelemetry^] is a set of APIs, SDKs, tooling, and integrations that are designed for the creation and management of telemetry data such as traces, metrics, and logs. MicroProfile Telemetry adopts OpenTelemetry so your applications can benefit from both manual and automatic traces.
 
 Traces represent requests and consist of multiple spans. Spans are representative of single operations in a request and contain a name, time-related data, log messages and metadata to give information about what occurs during a transaction.
 
-Context is an immutable object contained in the span data to identify the unique request that each span is a part of. This data is required for moving trace information across service boundaries, allowing developers to follow a single request through a potentially complex distributed system. Exporters are components that send data to a backend service so you can visualise and monitor the generated spans.
+Context is an immutable object that is contained in the span data to identify the unique request that each span is a part of. This data is required for moving trace information across service boundaries, allowing developers to follow a single request through a potentially complex distributed system. Exporters are components that send data to a backend service so you can visualize and monitor the generated spans.
 
 You'll configure the provided `inventory` and `system` services to use https://www.jaegertracing.io/[Jaeger] for distributed tracing with MicroProfile Telemetry. You'll run these services in two separate JVMs made of two server instances to demonstrate tracing in a distributed environment. If all the components were run on a single server, then any logging software would be sufficient.
 
@@ -135,7 +135,7 @@ Make sure that your Jaeger server is running and point your browser to the http:
 
 When you visit this endpoint, you make two GET HTTP requests, one to the system service and one to the inventory service. Both of these requests are configured to be traced, so a new trace is recorded in Jaeger.
 
-To view the traces, go to the http://localhost:16686 URL. You can view the traces for the `inventory` or `system` services under the **Search** tab. If you only see the **jaeger-query** option listed in the dropdown, you need to wait a little longer and refresh the page to see the application services.
+To view the traces, go to the http://localhost:16686 URL. You can view the traces for the `inventory` or `system` services under the **Search** tab. If you see only the **jaeger-query** option that is listed in the dropdown, you need to wait a little longer and refresh the page to see the application services.
 
 Select the services in the **Select A Service** menu and click the **Find Traces** button at the end of the section. You'll see the result as the following:
 
@@ -294,7 +294,7 @@ inventory/microprofile-config.properties
 include::finish/inventory/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
-Simiarly, specify the [hotspot=otel file=3]`otel` properties for the `inventory` service.
+Similarly, specify the [hotspot=otel file=3]`otel` properties for the `inventory` service.
 
 For more information about these and other Telemetry properties, see the https://openliberty.io/docs/latest/microprofile-config-properties.html#telemetry[MicroProfile Config properties for MicroProfile Telemetry^] documentation.
 
@@ -400,7 +400,7 @@ Now, you can check out the traces. Visit the http://localhost:9081/inventory/sys
 
 image::inventory_manager_span.png[Inventory Manager span,align="center"]
 
-Verify that there are two spans from the `inventory` service. Click the trace to view its details that contain a  `InventoryManager.list` span.
+Verify that there are two spans from the `inventory` service. Click the trace to view its details that contain a `InventoryManager.list` span.
 
 image::inventory_manager_list_span.png[Inventory Manager list span,align="center"]
 {empty} +
