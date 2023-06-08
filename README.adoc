@@ -366,7 +366,7 @@ InventoryManager.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java[]
 ----
 
-Annotate the [hotspot=addWithSpan file=0]`add()` and [hotspot=listWithSpan file=0]`list()` methods with the `@WithSpan` annotation. You can annotate the [hotspot=spanAttribute file=0]`host` parameter with the `@SpanAttribute` annotation with a customized value to indicate that it is part of the trace.
+Annotate the [hotspot=addMethod file=0]`add()` and [hotspot=listMethod file=0]`list()` methods with the [hotspot=addWithSpan hotspot=listWithSpan file=0]`@WithSpan` annotation. You can annotate the [hotspot=spanAttribute file=0]`host` parameter with the [hotspot=spanAttribute file=0]`@SpanAttribute` annotation with a customized value to indicate that it is part of the trace.
 
 //To customize a span name, you can annotate the `list()` method by the [hotspot=listWithSpan file=0]`@WithSpan` annotation with a value.
 

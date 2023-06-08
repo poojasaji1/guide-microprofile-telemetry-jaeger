@@ -46,11 +46,12 @@ public class InventoryManager {
 
     // tag::addWithSpan[]
     @WithSpan
+    // end::addWithSpan[]
+    // tag::addMethod[]
     // tag::spanAttribute[]
     public void add(@SpanAttribute(value = "hostname") String host,
     // end::spanAttribute[]
                     Properties systemProps) {
-    // end::addWithSpan[]
         Properties props = new Properties();
         props.setProperty("os.name", systemProps.getProperty("os.name"));
         props.setProperty("user.name", systemProps.getProperty("user.name"));
@@ -59,13 +60,16 @@ public class InventoryManager {
             systems.add(system);
         }
     }
+    // end::addMethod[]
 
     // tag::listWithSpan[]
     @WithSpan
-    public InventoryList list() {
     // end::listWithSpan[]
+    // tag::listMethod[]
+    public InventoryList list() {
         return new InventoryList(systems);
     }
+    // end::listMethod[]
 
     int clear() {
         int propertiesClearedCount = systems.size();
