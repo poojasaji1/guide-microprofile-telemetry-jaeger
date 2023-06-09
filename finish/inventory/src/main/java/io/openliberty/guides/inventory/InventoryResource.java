@@ -33,12 +33,13 @@ import jakarta.ws.rs.core.Response;
 public class InventoryResource {
 
     // tag::manager[]
-    @Inject InventoryManager manager;
+    @Inject
+    private InventoryManager manager;
     // end::manager[]
 
     // tag::inject[]
     @Inject
-    Tracer tracer;
+    private Tracer tracer;
     // end::inject[]
 
     @GET
@@ -48,11 +49,14 @@ public class InventoryResource {
         // tag::getPropertiesSpan[]
         Span getPropertiesSpan = tracer.spanBuilder("GettingProperties").startSpan();
         // end::getPropertiesSpan[]
-        // tag::getSystem[]
-        Properties props = manager.get(hostname);
-        // end::getSystem[]
         // tag::try[]
+        Properties props = null;
+        // tag::scope[]
         try (Scope scope = getPropertiesSpan.makeCurrent()) {
+        // end::scope[]
+            // tag::getSystem[]
+            props = manager.get(hostname);
+            // end::getSystem[]
             if (props == null) {
                 // tag::addEvent1[]
                 getPropertiesSpan.addEvent("Cannot get properties");

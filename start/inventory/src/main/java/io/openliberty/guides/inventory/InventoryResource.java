@@ -28,7 +28,8 @@ import jakarta.ws.rs.core.Response;
 @Path("/systems")
 public class InventoryResource {
 
-    @Inject InventoryManager manager;
+    @Inject
+    private InventoryManager manager;
 
     @GET
     @Path("/{hostname}")

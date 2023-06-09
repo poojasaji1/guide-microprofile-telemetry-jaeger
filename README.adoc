@@ -35,7 +35,7 @@ Distributed tracing helps DevOps teams to keep track of requests between microse
 // =================================================================================================
 
 == What you'll learn
-The use of microservices architecture may increase difficultly to see how services depend on or affect other services. Consequently, making it harder to find the source of latency or inaccuracy.
+The use of microservices architecture can increase difficulty to see how services depend on or affect other services. Consequently, making it harder to find the source of latency or inaccuracy.
 
 One way to increase observability of an application is by emitting traces. https://opentelemetry.io/[OpenTelemetry^] is a set of APIs, SDKs, tooling, and integrations that are designed for the creation and management of telemetry data such as traces, metrics, and logs. MicroProfile Telemetry adopts OpenTelemetry so your applications can benefit from both manual and automatic traces.
 
@@ -56,7 +56,7 @@ image::architecture_diagram.png[Application architecture,align="center"]
 
 Before you begin, deploy the Jaeger all-in-one executable file to start the Jaeger tracing system. The Jaeger all-in-one executable file is configured for quick local testing. Jaeger 1.46 or later is recommended. You can find information about the Jaeger server and instructions for starting the all-in-one executable file in the https://www.jaegertracing.io/docs/latest/getting-started[Jaeger documentation].
 
-Before you proceed, make sure that your Jaeger server is up and running. Jaeger can be found at the http://localhost:16686 URL.
+Before you proceed, make sure that your Jaeger server is up and running by visiting the http://localhost:16686 URL.
 
 // =================================================================================================
 // Getting started
@@ -135,9 +135,9 @@ Make sure that your Jaeger server is running and point your browser to the http:
 
 When you visit this endpoint, you make two GET HTTP requests, one to the system service and one to the inventory service. Both of these requests are configured to be traced, so a new trace is recorded in Jaeger.
 
-To view the traces, go to the http://localhost:16686 URL. You can view the traces for the `inventory` or `system` services under the **Search** tab. If you see only the **jaeger-query** option that is listed in the dropdown, you need to wait a little longer and refresh the page to see the application services.
+To view the traces, go to the http://localhost:16686 URL. You can view the traces for the `inventory` or `system` services under the **Search** tab. If you see only the **jaeger-query** option that is listed in the dropdown, wait a little longer and refresh the page to see the application services.
 
-Select the services in the **Select A Service** menu and click the **Find Traces** button at the end of the section. You'll see the result as the following:
+Select the services in the **Select A Service** menu and click the **Find Traces** button at the end of the section. You'll see the result as:
 
 image::inventory_service_spans.png[Get traces for the inventory service,align="center"]
 
@@ -257,7 +257,7 @@ Enable [hotspot=mpTelemetry file=0]`mpTelemetry` feature in the `server.xml` of 
 ----
 
 inventory/server.xml
-[source, xml, linenums, role='code_column hide_tags=thirdParty']
+[source, xml, linenums, role='code_column hide_tags=thirdPartyComment,thirdParty']
 ----
 include::finish/inventory/src/main/liberty/config/server.xml[]
 ----
@@ -300,7 +300,7 @@ For more information about these and other Telemetry properties, see the https:/
 
 To run the `system` and `inventory` services, simply navigate your browser to the http://localhost:9081/inventory/systems/localhost URL.
 
-To view the traces, go to the http://localhost:16686 URL. You can view the traces for the `inventory` or `system` services under the **Search** tab. Select the services in the **Select A Service** menu and click the **Find Traces** button at the end of the section. You'll see the result as the following:
+To view the traces, go to the http://localhost:16686 URL. You can view the traces for the `inventory` or `system` services under the **Search** tab. Select the services in the **Select A Service** menu and click the **Find Traces** button at the end of the section. You'll see the result as:
 
 image::default_spans.png[Default spans,align="center"]
 
@@ -318,8 +318,7 @@ Automatic instrumentation only instruments Jakarta RESTful web services and Micr
 
 === Enabling OpenTelemetry APIs
 
-// The MicroProfile Telemetry feature has been enabled tracing of all REST endpoints by default in the previous section. To further control and customize traces, use the `@WithSpan` annotation to enable particular methods. You can also inject a custom `Tracer` object to create and customize spans.
-The MicroProfile Telemetry feature has been enabled tracing of all REST endpoints by default in the previous section. To further control and customize traces, you inject a custom `Tracer` object to create and customize spans.
+The MicroProfile Telemetry feature has been enabled to trace all REST endpoints by default in the previous section. To further control and customize traces, use the `@WithSpan` annotation to enable particular methods. You can also inject a `Tracer` object to create and customize spans.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -370,6 +369,31 @@ Annotate the [hotspot=addMethod file=0]`add()` and [hotspot=listMethod file=0]`l
 
 //To customize a span name, you can annotate the `list()` method by the [hotspot=listWithSpan file=0]`@WithSpan` annotation with a value.
 
+Now, you can check out the traces. Visit the http://localhost:9081/inventory/systems URL and then your Jaeger server at the http://localhost:16686 URL. Select the `inventory` service and click the **Find Traces** button at the end of the section. You'll see the result as:
+
+image::inventory_manager_span.png[Inventory Manager span,align="center"]
+
+
+Verify that there are two spans from the `inventory` service. Click the trace to view its details. You'll see the  `InventoryManager.list` span that is created by the `@WithSpan` annotation.
+
+image::inventory_manager_list_span.png[Inventory Manager list span,align="center"]
+
+
+Visit the http://localhost:9081/inventory/systems/localhost URL and then your Jaeger server at the http://localhost:16686 URL. Select the `inventory` service and click the **Find Traces** button at the end of the section. You'll see the result as:
+
+image::inventory_service_4_spans.png[Get traces for the inventory service,align="center"]
+
+
+Verify that there are three spans from `inventory` service and one span from `system` service. Click the trace to view its details.
+
+image::inventory_details_4_spans.png[Inventory details spans,align="center"]
+
+
+Click the `InventoryManager.add` span and its `Tags`. You can see the `hostname` tag with the `localhost` value that is created by the `@SpanAttribute` annotation.
+
+image::inventory_manager_add_span.png[Inventory Manager add span,align="center"]
+{empty} +
+
 
 === Injecting a custom Tracer object
 
@@ -391,43 +415,41 @@ To access the Tracer, inject it into a bean by using the [hotspot=inject file=0]
 
 Before the [hotspot=manager hotspot=getSystem file=0]`InventoryManager` to call the `system` service, create and start a span called [hotspot=getPropertiesSpan file=0]`GettingProperties` by using the `spanBuilder()` and `startSpan()` Tracer APIs.
 
-The [hotspot=try file=0]`try` block is called a `try-with-resources` statement that the `scope` object is closed at the end of the statement. It’s good practice to define custom spans inside such statements. Otherwise, any exceptions that are thrown before the span closes will leak the active span.
+The [hotspot=try file=0]`try` block is called a `try-with-resources` statement that the [hotspot=scope file=0]`scope` object is closed at the end of the statement. It’s good practice to define custom spans inside such statements. Otherwise, any exceptions that are thrown before the span closes will leak the active span.
 
 Use the [hotspot=addEvent1 hotspot=addEvent2 file=0]`addEvent()` Span API to create an event when the properties are received and an event when fails to get the properties from the [hotspot=manager hotspot=getSystem file=0]`system` service. Use the [hotspot=end file=0]`end()` Span API to mark the `GettingProperties` span completed.
 
 
-Now, you can check out the traces. Visit the http://localhost:9081/inventory/systems URL and then your Jaeger server at the http://localhost:16686 URL. Select the `inventory` service and click the **Find Traces** button at the end of the section. You'll see the result as the following:
-
-image::inventory_manager_span.png[Inventory Manager span,align="center"]
-
-Verify that there are two spans from the `inventory` service. Click the trace to view its details that contain a `InventoryManager.list` span.
-
-image::inventory_manager_list_span.png[Inventory Manager list span,align="center"]
-{empty} +
-
-Visit the http://localhost:9081/inventory/systems/localhost URL and then your Jaeger server at the http://localhost:16686 URL. Select the `inventory` service and click the **Find Traces** button at the end of the section. You'll see the result as the following:
+Visit the http://localhost:9081/inventory/systems/localhost URL and then your Jaeger server at the http://localhost:16686 URL. Select the `inventory` service and click the **Find Traces** button at the end of the section. You'll see the result:
 
 image::inventory_service_spans.png[Get traces for the inventory service,align="center"]
 
-Verify that there are four spans from `inventory` service and one span from `system` service. Click the trace to view its details.
+
+Verify that there are four spans from `inventory` service and one span from `system` service. Click the trace to view its details. You'll see the `GettingProperties` span.
 
 image::inventory_details_spans.png[Inventory details spans,align="center"]
 
-Click the `InventoryManager.add` span and its `Tags`. You can see the `hostname` tag with the `localhost` value.
 
-image::inventory_manager_add_span.png[Inventory Manager add span,align="center"]
+Visit the http://localhost:9081/inventory/systems/unknown URL and then your Jaeger server at the http://localhost:16686 URL. Select the `inventory` service and click the **Find Traces** button at the end of the section. You'll see the result as:
+
+image::inventory_service_unknown_spans.png[Get traces for unknown hostname,align="center"]
+
+
+There are two spans from `inventory` service. Click the trace to view its details. You'll see the `GettingProperties` span. Click the `GettingProperties` span and its `Logs`. You can see the `Cannot get properties` message.
+
+image::logs_at_gettingProperties.png[Logs at GettingProperties span,align="center"]
+{empty} +
 
 
 To learn more how to use OpenTelemetry APIs to instrument code, see the https://opentelemetry.io/docs/instrumentation/java/manual/[OpenTelemetry Manual Instrumentation] documentation.
+
 
 // =================================================================================================
 // Testing the application 
 // =================================================================================================
 == Testing the application 
 
-No automated tests are provided to verify the correctness of the traces. Manually verify these traces by viewing them on the Jaeger server.
-
-A few tests are included for you to test the basic functionality of the services. If a test failure occurs, then you might have introduced a bug into the code.
+Manually verify the traces by viewing them on the Jaeger server. A few tests are included for you to test the basic functionality of the services. If a test failure occurs, then you might have introduced a bug into the code.
 
 === Running the tests
 

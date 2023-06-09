@@ -30,7 +30,7 @@ public class InventoryManager {
 
     @Inject
     @ConfigProperty(name = "system.http.port")
-    int SYSTEM_PORT;
+    private int SYSTEM_PORT;
 
     private List<SystemData> systems = Collections.synchronizedList(new ArrayList<>());
     private SystemClient systemClient = new SystemClient();
