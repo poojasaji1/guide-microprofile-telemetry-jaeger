@@ -49,7 +49,7 @@ public class InventoryManager {
     // end::addWithSpan[]
     // tag::addMethod[]
     // tag::spanAttribute[]
-    public void add(@SpanAttribute(value = "hostname") String host,
+    public void add(@SpanAttribute("hostname") String host,
     // end::spanAttribute[]
                     Properties systemProps) {
         Properties props = new Properties();
