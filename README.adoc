@@ -23,7 +23,6 @@
 :page-seo-description: A getting started tutorial and an example on how to enable distributed tracing in Java microservices to easily trace request flows that span multiple resources by using MicroProfile Telemetry and Jaeger distributed tracing system.​
 :source-highlighter: prettify
 :guide-author: Open Liberty
-
 = Enabling distributed tracing in microservices with OpenTelemetry and Jaeger
 
 [.hidden]
