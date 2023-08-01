@@ -114,13 +114,13 @@ endif::[]
 ifdef::cloud-hosted[]
 Navigate to the ***finish/system*** directory. Run the following Maven goal to build the ***system*** service and deploy it to Open Liberty:
 ```bash
-cd /home/project/draft-guide-microprofile-telemetry-jaeger/finish/system
+cd /home/project/guide-microprofile-telemetry-jaeger/finish/system
 mvn liberty:run
 ```
 
 Open another command-line session and navigate to the ***finish/inventory*** directory. Run the following Maven goal to build the ***inventory*** service and deploy it to Open Liberty:
 ```bash
-cd /home/project/draft-guide-microprofile-telemetry-jaeger/finish/inventory
+cd /home/project/guide-microprofile-telemetry-jaeger/finish/inventory
 mvn liberty:run
 ```
 endif::[]
@@ -176,7 +176,7 @@ endif::[]
 // cloud-hosted guide instructions:
 ifdef::cloud-hosted[]
 ```bash
-cd /home/project/draft-guide-microprofile-telemetry-jaeger/finish
+cd /home/project/guide-microprofile-telemetry-jaeger/finish
 mvn -pl system liberty:stop
 mvn -pl inventory liberty:stop
 ```
@@ -204,7 +204,7 @@ endif::[]
 // cloud-hosted guide instructions:
 ifdef::cloud-hosted[]
 ```bash
-cd /home/project/draft-guide-microprofile-telemetry-jaeger/start/system
+cd /home/project/guide-microprofile-telemetry-jaeger/start/system
 mvn liberty:dev
 ```
 endif::[]
@@ -222,7 +222,7 @@ endif::[]
 // cloud-hosted guide instructions:
 ifdef::cloud-hosted[]
 ```bash
-cd /home/project/draft-guide-microprofile-telemetry-jaeger/start/inventory
+cd /home/project/guide-microprofile-telemetry-jaeger/start/inventory
 mvn liberty:dev
 ```
 endif::[]
