@@ -9,7 +9,7 @@
 :page-layout: guide-multipane
 :projectid: microprofile-telemetry-jaeger
 :page-duration: 20 minutes
-:page-releasedate: 2023-06-30
+:page-releasedate: 2023-08-01
 :page-guide-category: microprofile
 :page-essential: false
 :page-description: Explore how to enable and customize tracing of microservices using MicroProfile Telemetry and Jaeger tracing system.
@@ -494,7 +494,7 @@ Before the [hotspot=manager hotspot=getSystem file=0]`InventoryManager` calls th
 
 When you start a span, you must also end it by calling [hotspot=end file=0]`end()` on the span. If you don't end a span, it won't be recorded at all and won't show up in Jaeger. This code ensures that [hotspot=end file=0]`end()` is always called by including it in a `finally` block.
 
-After you start the span, make it current with the [hotspot=scope file=0]`makeCurrent()` call. Making a span current means that any new spans created in the same thread, either automatically by open liberty or manually by calling the API, will use this span as their parent span.
+After you start the span, make it current with the [hotspot=scope file=0]`makeCurrent()` call. Making a span current means that any new spans created in the same thread, either automatically by Open Liberty or manually by calling the API, will use this span as their parent span.
 
 The `makeCurrent()` call returns a `Scope`. Make sure to always close the `Scope`, which stops the span from being current and makes the previous span current again. Use a [hotspot=try file=0]`try-with-resources` block, which automatically closes the `Scope` at the end of the block.
 
