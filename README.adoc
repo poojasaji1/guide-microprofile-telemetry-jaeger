@@ -12,7 +12,7 @@
 :page-releasedate: 2023-06-30
 :page-guide-category: microprofile
 :page-essential: false
-:page-description: Explore how to enable and customize tracing of REST service endpoint methods by using MicroProfile Telemetry and Jaeger tracing system.
+:page-description: Explore how to enable and customize tracing of microservices using MicroProfile Telemetry and Jaeger tracing system.
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile']
 :page-permalink: /guides/{projectid}
@@ -37,11 +37,11 @@ Distributed tracing helps teams keep track of requests between microservices. Mi
 == What you'll learn
 The complexity of microservices architecture can make it more difficult to understand how services depend on or affect each other and to identify sources of latency or inaccuracies.
 
-One way to increase the observability of an application is by emitting traces. https://opentelemetry.io/[OpenTelemetry^] is a set of APIs, SDKs, tooling, and integrations designed to create and manage telemetry data such as traces, metrics, and logs. MicroProfile Telemetry adopts OpenTelemetry so your applications can benefit from both manual and automatic traces.
+One way to increase the observability of an application is by emitting traces. https://opentelemetry.io/[OpenTelemetry^] is a set of APIs, SDKs, tooling, and integrations designed to create and manage telemetry data such as traces, metrics, and logs. MicroProfile Telemetry adopts OpenTelemetry so your Java applications can benefit from both manual and automatic traces.
 
 Traces represent requests, which can contain multiple operations or spans. Each span comprises a name, time-related data, log messages, and metadata that describe what occurred during a transaction. Spans are associated with a context, which identifies the request within which the span occurred. Developers can then follow a single request between services through a potentially complex distributed system. Exporters send the data that MicroProfile Telemetry collects to Jaeger so you can visualize and monitor the generated spans.
 
-The diagram shows multiple services, which is where distributed tracing is valuable. However, for simplicity, in this guide, you'll configure only the `system` and `inventory` services to use https://www.jaegertracing.io/[Jaeger^] for distributed tracing with MicroProfile Telemetry. You'll run these services in two separate JVMs made of two server instances to demonstrate tracing in a distributed environment.
+The diagram shows multiple services, which is where distributed tracing is valuable. However, for simplicity, in this guide, you'll configure only the `system` and `inventory` services to use https://www.jaegertracing.io/[Jaeger^] for distributed tracing with MicroProfile Telemetry. You'll run these services in two separate JVMs made of two Open Liberty instances to demonstrate tracing in a distributed environment.
 
 image::architecture_diagram.png[Application architecture,align="center"]
 
@@ -162,7 +162,7 @@ The trace has five spans, four from the `inventory` service and one from the `sy
 image::inventory_details_spans.png[Inventory details spans,align="center"]
 
 
-After you’re finished reviewing the application, stop the Open Liberty servers by pressing `CTRL+C` in the command-line sessions where you ran the `system` and `inventory` services. Alternatively, you can run the following goals from the `finish` directory in another command-line session:
+After you’re finished reviewing the application, stop the Open Liberty instances by pressing `CTRL+C` in the command-line sessions where you ran the `system` and `inventory` services. Alternatively, you can run the following goals from the `finish` directory in another command-line session:
 
 // static guide instructions:
 ifndef::cloud-hosted[]
@@ -189,7 +189,7 @@ endif::[]
 
 You need to start the services to see basic traces appear in Jaeger.
 
-When you run Open Liberty in https://openliberty.io/docs/latest/development-mode.html[dev mode^], the server listens for file changes and automatically recompiles and deploys your updates whenever you save a new change.
+When you run Open Liberty in https://openliberty.io/docs/latest/development-mode.html[dev mode^], dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change.
 
 Open a command-line session and navigate to the `start/system` directory. Run the following Maven goal to start the `system` service in dev mode:
 
@@ -227,7 +227,7 @@ mvn liberty:dev
 ```
 endif::[]
 
-After you see the following message, your application server in dev mode is ready:
+After you see the following message, your Liberty instance is ready in dev mode:
 
 [role="no_copy"]
 ----
@@ -239,7 +239,7 @@ Dev mode holds your command-line session to listen for file changes. Open anothe
 
 // static guide instructions:
 ifndef::cloud-hosted[]
-When the servers start, you can find the `system` and `inventory` services at the following URLs:
+When the runtime instances start, you can find the `system` and `inventory` services at the following URLs:
 
 * http://localhost:9080/system/properties
 * http://localhost:9081/inventory/systems
@@ -247,7 +247,7 @@ endif::[]
 
 // cloud-hosted guide instructions:
 ifdef::cloud-hosted[]
-When the servers start, you can find the ***system*** service by running the following curl command:
+When the runtime instances start, you can find the ***system*** service by running the following curl command:
 ```bash
 curl -s http://localhost:9080/system/properties | jq
 ```
