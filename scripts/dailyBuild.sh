@@ -7,7 +7,7 @@ while getopts t:d: flag; do
     esac
 done
 
-sed -i "\#<artifactId>liberty-maven-plugin</artifactId>#a<configuration><install><runtimeUrl>https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly/$DATE/$DRIVER</runtimeUrl></install></configuration>" inventory/pom.xml system/pom.xml
-cat inventory/pom.xml system/pom.xml
+sed -i "\#<artifactId>liberty-maven-plugin</artifactId>#a<configuration><install><runtimeUrl>https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly/$DATE/$DRIVER</runtimeUrl></install></configuration>" inventory/pom.xml system/pom.xml ../start/inventory/pom.xml ../start/system/pom.xml
+cat inventory/pom.xml system/pom.xml ../start/inventory/pom.xml ../start/system/pom.xml
 
 ../scripts/testApp.sh
