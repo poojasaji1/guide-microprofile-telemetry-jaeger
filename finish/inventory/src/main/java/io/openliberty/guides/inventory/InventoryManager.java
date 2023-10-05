@@ -44,8 +44,17 @@ public class InventoryManager {
         return properties;
     }
 
-    // tag::addWithSpan[]
+    // tag::listWithSpan[]
     @WithSpan
+    // end::listWithSpan[]
+    // tag::listMethod[]
+    public InventoryList list() {
+        return new InventoryList(systems);
+    }
+    // end::listMethod[]
+
+    // tag::addWithSpan[]
+    @WithSpan("Inventory Manager Add")
     // end::addWithSpan[]
     // tag::addMethod[]
     // tag::spanAttribute[]
@@ -61,15 +70,6 @@ public class InventoryManager {
         }
     }
     // end::addMethod[]
-
-    // tag::listWithSpan[]
-    @WithSpan
-    // end::listWithSpan[]
-    // tag::listMethod[]
-    public InventoryList list() {
-        return new InventoryList(systems);
-    }
-    // end::listMethod[]
 
     int clear() {
         int propertiesClearedCount = systems.size();
