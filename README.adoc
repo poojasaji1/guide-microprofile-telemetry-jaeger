@@ -1,4 +1,4 @@
-// Copyright (c) 2023 IBM Corporation and others.
+// Copyright (c) 2023, 2024 IBM Corporation and others.
 // Licensed under Creative Commons Attribution-NoDerivatives
 // 4.0 International (CC BY-ND 4.0)
 // https://creativecommons.org/licenses/by-nd/4.0/
@@ -14,7 +14,7 @@
 :page-essential: false
 :page-description: Explore how to enable and customize tracing of microservices using MicroProfile Telemetry and Jaeger tracing system.
 :guide-author: Open Liberty
-:page-tags: ['MicroProfile']
+:page-tags: ['microprofile']
 :page-permalink: /guides/{projectid}
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/prod
 :page-related-guides: [ 'cdi-intro', `microprofile-metrics`, `microprofile-health` ]
@@ -315,7 +315,7 @@ The MicroProfile properties file sets the [hotspot=service file=2]`otel.service.
 
 [role="code_command hotspot file=3", subs="quotes"]
 ----
-#Create the `microprofile-config.properties` file of the inventory service:#
+#Replace the `microprofile-config.properties` file of the inventory service:#
 `inventory/src/main/resources/META-INF/microprofile-config.properties`
 ----
 
