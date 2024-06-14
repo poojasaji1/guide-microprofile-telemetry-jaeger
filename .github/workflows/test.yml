@@ -53,7 +53,7 @@ jobs:
       - run: unset _JAVA_OPTIONS
 
       - name: Run tests
-        run: logsPath=$(sudo find ../scripts/testApp.sh
+        run: sudo ../scripts/testApp.sh
 
       - name: Post tests
         if: always()
